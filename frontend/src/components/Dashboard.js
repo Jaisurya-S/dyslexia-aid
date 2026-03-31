@@ -101,7 +101,7 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/dashboard-data/${user.user_id}`,{timeout:6000});
+      const { data } = await axios.get(`https://dyslexia-aid.onrender.com/api/dashboard-data/${user.user_id}`,{timeout:6000});
       setScores({...DEFAULT_SCORES,...(data.highest_scores||{})});
       setMetrics({...DEFAULT_METRICS,...(data.learning_metrics||{})});
       setRawBlocks(data.learning_blocks||[]);

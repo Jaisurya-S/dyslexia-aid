@@ -44,7 +44,7 @@ const Games = () => {
 
   const saveGameScore = async (gameType, score, level, timeTaken = null) => {
     try {
-      await axios.post('http://localhost:5000/api/save-game-score', {
+      await axios.post('https://dyslexia-aid.onrender.com/api/save-game-score', {
         user_id: user.user_id,
         game_type: gameType,
         score: score,

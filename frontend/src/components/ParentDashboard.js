@@ -25,7 +25,7 @@ const ParentDashboard = () => {
 
   const fetchChildrenData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/parent-dashboard/${user.user_id}`);
+      const response = await axios.get(`https://dyslexia-aid.onrender.com/api/parent-dashboard/${user.user_id}`);
       console.log('Parent dashboard response:', response.data);
       
       if (response.data && response.data.children) {
@@ -64,7 +64,7 @@ const ParentDashboard = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/change-password', {
+      const response = await axios.post('https://dyslexia-aid.onrender.com/api/change-password', {
         user_id: user.user_id,
         current_password: passwordData.currentPassword,
         new_password: passwordData.newPassword

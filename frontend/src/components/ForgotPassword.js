@@ -16,7 +16,7 @@ const ForgotPassword = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/forgot-password', {
+      const response = await axios.post('https://dyslexia-aid.onrender.com/api/forgot-password', {
         email
       });
       setMessage(response.data.message);

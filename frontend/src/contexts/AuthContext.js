@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post('https://dyslexia-aid.onrender.com/api/login', {
         username,
         password
       });

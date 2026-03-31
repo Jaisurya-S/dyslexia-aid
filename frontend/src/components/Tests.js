@@ -616,7 +616,7 @@ const Tests = () => {
   const loadSentences = useCallback(async () => {
     const type = activeTab === 'speech' ? 'speech_test' : 'listening_test';
     try {
-      const res = await axios.get(`http://localhost:5000/api/get-adaptive-content/${type}`, {
+      const res = await axios.get(`https://dyslexia-aid.onrender.com/api/get-adaptive-content/${type}`, {
         params: { user_id: user?.user_id, difficulty }, timeout: 4000,
       });
       setSentences(res.data.content || []);
@@ -636,7 +636,7 @@ const Tests = () => {
     setSvmLoading(true);
     const features = { wpm: wpm||0, accuracy, streak, sessionHistory: history };
     try {
-      const res = await axios.post('http://localhost:5000/api/svm-predict', {
+      const res = await axios.post('https://dyslexia-aid.onrender.com/api/svm-predict', {
         user_id: user?.user_id,
         features: { wpm:features.wpm, accuracy:features.accuracy, streak:features.streak, session_history:features.sessionHistory },
       }, { timeout: 5000 });
@@ -676,7 +676,7 @@ const Tests = () => {
     setCorrectWords(c => c + wordResults.filter(w=>w.status==='correct').length);
 
     const [speechRes] = await Promise.allSettled([
-      axios.post('http://localhost:5000/api/speech-test', {
+      axios.post('https://dyslexia-aid.onrender.com/api/speech-test', {
         user_id:user?.user_id, spoken_text:spokenText, original_text:currentSentence,
       }, { timeout:5000 }),
       runSVM({ wpm, accuracy, streak:streakCount, history:newHistory, weakWords }),
@@ -699,7 +699,7 @@ const Tests = () => {
     setCorrectWords(c => c + wordResults.filter(w=>w.status==='correct').length);
 
     const [lr] = await Promise.allSettled([
-      axios.post('http://localhost:5000/api/listening-test', {
+      axios.post('https://dyslexia-aid.onrender.com/api/listening-test', {
         user_id:user?.user_id, typed_text:typedText, original_text:currentSentence,
       }, { timeout:5000 }),
       runSVM({ wpm:null, accuracy, streak:streakCount, history:newHistory, weakWords }),

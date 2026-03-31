@@ -196,7 +196,7 @@ const Progress = () => {
     setError('');
     try {
       const { data: d } = await axios.get(
-        `http://localhost:5000/api/progress/${user.user_id}`,
+        `https://dyslexia-aid.onrender.com/api/progress/${user.user_id}`,
         { timeout: 6000 }
       );
       setData(d);

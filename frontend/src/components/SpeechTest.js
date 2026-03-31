@@ -159,7 +159,7 @@ const SpeechTest = () => {
         return;
       }
 
-      const response = await axios.post('http://localhost:5000/api/speech-test', {
+      const response = await axios.post('https://dyslexia-aid.onrender.com/api/speech-test', {
         user_id: user.user_id,
         spoken_text: transcript,
         original_text: paragraph,
@@ -194,7 +194,7 @@ const SpeechTest = () => {
 
       setLoading(true);
       try {
-        const response = await axios.post('http://localhost:5000/api/speech-test', {
+        const response = await axios.post('https://dyslexia-aid.onrender.com/api/speech-test', {
           user_id: user.user_id,
           spoken_text: manualText,
           original_text: paragraph,
