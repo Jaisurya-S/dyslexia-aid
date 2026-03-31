@@ -1,0 +1,184 @@
+/* Dashboard.css — Professional & Kids-Friendly (Light/Dark themes only) */
+
+/* ── Animations ────────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.06); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+.fade-up {
+  animation: fadeUp 0.5s ease both;
+}
+
+/* ── Score Cards ───────────────────────────────────────────────────────────── */
+.score-card {
+  border-radius: 22px !important;
+  transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+  cursor: default;
+}
+
+.score-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ── Calendar Cells ────────────────────────────────────────────────────────── */
+.cal-cell {
+  border-radius: 4px;
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.cal-cell:hover {
+  transform: scale(1.5) !important;
+  z-index: 10;
+}
+
+/* ── Dashboard Root ────────────────────────────────────────────────────────── */
+.dash-root {
+  min-height: 100vh;
+  font-family: 'Nunito', 'Segoe UI', sans-serif;
+  padding-bottom: 60px;
+}
+
+/* ── Hero Banner ───────────────────────────────────────────────────────────── */
+.dash-hero {
+  background: linear-gradient(135deg, #667eea 0%, #a78bfa 50%, #f093fb 100%);
+  border-radius: 0 0 40px 40px;
+  padding: 36px 32px 44px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.35);
+}
+
+.dash-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── Section Titles ────────────────────────────────────────────────────────── */
+.dash-section-title {
+  font-family: 'Fredoka One', 'Nunito', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--text-primary, #1e293b);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+}
+
+/* ── Cards shared ──────────────────────────────────────────────────────────── */
+.dash-card {
+  background: var(--card-bg, #fff);
+  border-radius: 24px;
+  border: 2px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  padding: 24px 22px;
+  transition: box-shadow 0.2s ease;
+}
+
+.dash-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Metric Cards ──────────────────────────────────────────────────────────── */
+.metric-card-inner {
+  border-radius: 20px;
+  padding: 20px 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card-inner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Tip Cards ─────────────────────────────────────────────────────────────── */
+.tip-card-inner {
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.tip-card-inner:hover {
+  transform: translateY(-3px);
+}
+
+/* ── Calendar Wrap ─────────────────────────────────────────────────────────── */
+.cal-wrap {
+  background: var(--card-bg, #fff);
+  border-radius: 24px;
+  padding: 24px 22px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border: 2px solid var(--border-color, #e2e8f0);
+  overflow-x: auto;
+}
+
+/* ── Error Banner ──────────────────────────────────────────────────────────── */
+.error-banner {
+  background: #fff5f5;
+  border: 2px solid #fca5a5;
+  border-radius: 18px;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* ── Loading Screen ────────────────────────────────────────────────────────── */
+.dash-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--bg-gradient, #f8fafc);
+}
+
+.dash-loading-star {
+  font-size: 56px;
+  animation: spin 1.2s linear infinite;
+  display: block;
+}
+
+.dash-loading-text {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  color: #94a3b8;
+  font-size: 1.1rem;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .dash-hero {
+    padding: 24px 18px 32px;
+    border-radius: 0 0 28px 28px;
+  }
+}
