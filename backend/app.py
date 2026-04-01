@@ -296,8 +296,73 @@ def register():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
-    user = User.query.filter_by(username=data['username']).first()
-    
+    user = User.query.filter_by(email=data.get('email')).first() \
+        or User.query.filter_by(username=data.get('username')).first()
+
+    # Google sign-in: skip password check, auto-register if first time
+    if data.get('google'):
+        if user:
+            user.last_active = datetime.utcnow()
+            db.session.commit()
+            return jsonify({
+                'message': 'Login successful',
+                'user_id': user.id,
+                'user_type': user.user_type,
+                'username': user.username,
+                'email': user.email,
+                'current_difficulty': user.current_difficulty if user.user_type == 'child' else None
+            }), 200
+        else:
+            # Auto-register Google user as child by default
+            email = data.get('email', '')
+            display_name = data.get('display_name', '')
+            username = display_name.replace(' ', '_').lower() if display_name else email.split('@')[0]
+
+            # Ensure username is unique
+            base_username = username
+            counter = 1
+            while User.query.filter_by(username=username).first():
+                username = f"{base_username}{counter}"
+                counter += 1
+
+            # Create parent account
+            parent_username = f"parent_{username}"
+            parent_password = f"google_{username}@parent"
+            email_parts = email.split('@')
+            parent_email = f"{email_parts[0]}+parent@{email_parts[1]}"
+
+            parent_user = User(
+                username=parent_username,
+                email=parent_email,
+                password_hash=generate_password_hash(parent_password),
+                user_type='parent'
+            )
+            db.session.add(parent_user)
+            db.session.flush()
+
+            new_user = User(
+                username=username,
+                email=email,
+                password_hash=generate_password_hash(f"google_{email}"),
+                user_type='child',
+                parent_id=parent_user.id,
+                age=8,
+                current_difficulty=1.0,
+                performance_history='[]',
+                consecutive_low_scores=0
+            )
+            db.session.add(new_user)
+            db.session.commit()
+
+            return jsonify({
+                'message': 'Account created and logged in',
+                'user_id': new_user.id,
+                'user_type': new_user.user_type,
+                'username': new_user.username,
+                'email': new_user.email,
+                'current_difficulty': new_user.current_difficulty
+            }), 200
+
     if user and check_password_hash(user.password_hash, data['password']):
         user.last_active = datetime.utcnow()
         db.session.commit()
