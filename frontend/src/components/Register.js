@@ -1,7 +1,6 @@
-// components/Register.js - CORRECTED VERSION
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
 import './Auth.css';
 
 const Register = () => {
@@ -15,14 +14,10 @@ const Register = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,49 +25,37 @@ const Register = () => {
     setError('');
     setMessage('');
 
-    try {
-      const response = await axios.post('https://dyslexia-aid.onrender.com/api/register', formData);
-      
-      if (response.status === 201) {
-        if (formData.user_type === 'child') {
-          setMessage(`
-            🎉 Child Account Created Successfully!
+    const result = await register(formData);
 
-            👤 Your Child Login Details:
-            • Username: ${response.data.child_username}
-            • Password: ${response.data.child_password}
+    if (result.success) {
+      const data = result.data;
+      if (formData.user_type === 'child') {
+        setMessage(`
+          🎉 Child Account Created Successfully!
 
-            👨‍👩‍👧‍👦 Parent Monitoring Account (Auto-generated):
-            • Parent ID: ${response.data.parent_username}
-            • Password: ${response.data.parent_password}
+          👤 Your Child Login Details:
+          • Email: ${formData.email}
+          • Password: ${formData.password}
 
-            📝 Important:
-            Parents can use the Parent ID and Password above to login 
-            and monitor their child's progress anytime!
-          `);
-        } else {
-          setMessage('✅ Parent account created successfully!');
-        }
-        
-        // Clear form
-        setFormData({
-          username: '',
-          email: '',
-          password: '',
-          user_type: 'child',
-          age: ''
-        });
+          👨👩👧👦 Parent Monitoring Account (Auto-generated):
+          • Parent ID: ${data.parent_username}
+          • Password: ${data.parent_password}
 
-        // Redirect to login after 8 seconds
-        setTimeout(() => {
-          navigate('/login');
-        }, 8000);
+          📝 Important:
+          Parents can use the Parent ID and Password above to login
+          and monitor their child's progress anytime!
+        `);
+      } else {
+        setMessage('✅ Parent account created successfully!');
       }
-    } catch (error) {
-      setError(error.response?.data?.error || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
+
+      setFormData({ username: '', email: '', password: '', user_type: 'child', age: '' });
+      setTimeout(() => navigate('/login'), 8000);
+    } else {
+      setError(result.error);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -80,34 +63,33 @@ const Register = () => {
       <div className="auth-card">
         <h2>Join Dyslexia Aid</h2>
         <p className="auth-subtitle">Create your account</p>
-        
+
         {error && <div className="error-message">{error}</div>}
         {message && (
           <div className="success-message" style={{ whiteSpace: 'pre-line' }}>
             {message}
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Account Type</label>
-            <select 
-              name="user_type" 
+            <select
+              name="user_type"
               value={formData.user_type}
               onChange={handleChange}
               className="child-friendly-input"
             >
               <option value="child">👶 Child Account</option>
-              <option value="parent">👨‍👩‍👧‍👦 Parent Account</option>
+              <option value="parent">👨👩👧👦 Parent Account</option>
             </select>
             <small className="help-text">
-              {formData.user_type === 'child' 
+              {formData.user_type === 'child'
                 ? 'Child account includes automatic parent account creation'
-                : 'Create a standalone parent account'
-              }
+                : 'Create a standalone parent account'}
             </small>
           </div>
-          
+
           <div className="form-group">
             <label>Username</label>
             <input
@@ -120,7 +102,7 @@ const Register = () => {
               placeholder="Choose a username"
             />
           </div>
-          
+
           <div className="form-group">
             <label>Email</label>
             <input
@@ -133,7 +115,7 @@ const Register = () => {
               placeholder="Enter your email"
             />
           </div>
-          
+
           <div className="form-group">
             <label>Password</label>
             <input
@@ -146,7 +128,7 @@ const Register = () => {
               placeholder="Choose a password"
             />
           </div>
-          
+
           {formData.user_type === 'child' && (
             <div className="form-group">
               <label>Age</label>
@@ -165,7 +147,6 @@ const Register = () => {
             </div>
           )}
 
-          {/* Parent Account Preview for Child Registration */}
           {formData.user_type === 'child' && formData.username && formData.password && (
             <div className="parent-preview">
               <h4>📋 Parent Account Preview:</h4>
@@ -184,16 +165,12 @@ const Register = () => {
               </div>
             </div>
           )}
-          
-          <button 
-            type="submit" 
-            disabled={loading}
-            className="auth-button"
-          >
+
+          <button type="submit" disabled={loading} className="auth-button">
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
-        
+
         <p className="auth-link">
           Already have an account? <Link to="/login">Login</Link>
         </p>
